@@ -1,14 +1,35 @@
-# e7impress parser
+# e7impress utils
 
 This is a parser for e7impress files.
 The song can be written into a json file, for easy usage with further content.
 
-## Setup
+## setup
 
-You need to install the `pydantic` package from your favorite python package
-manager.
+You need to install the following dependencies package from your favorite
+python package manager.
 
-## Usage
+- click
+- pydantic
+
+## command line utilities
+
+The is a command-line program `e7` can be used to create scripts.
+
+Example (in your shell):
+
+```shell
+$ ./e7 parse path/to/file.7is
+$ ./e7 parse -f txt path/to/file.7is
+$ ./e7 parse -o output.json path/to/file.7is
+```
+
+The resulting json files can be loaded and printed as txt:
+
+```shell
+$ ./e7 load output.json
+```
+
+## e7parser
 
 You can load and parse a file like this:
 

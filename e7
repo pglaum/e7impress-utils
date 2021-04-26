@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+
+from e7parser import E7File, Song
+import click
+
+
+@click.group()
+@click.option('--debug/--no-debug', default=False)
+@click.pass_context
+def cli(ctx, debug: bool) -> None:
+    """Initialize the cli context.
+    """
+
+    ctx.ensure_object(dict)
+    ctx.obj['DEBUG'] = debug
+
+
+@cli.command()
+@click.argument('filename',
+                type=click.Path(exists=True))
+@click.option('--format', '-f',
+              type=click.Choice(['txt', 'json'], case_sensitive=False),
+              default='json',
+              help='The output format.')
+@click.option('--output', '-o',
+              help='The output file. If no filename is given, the result is'
+              'written to stdout.')
+@click.pass_context
+def parse(ctx, filename, format, output):
+    """Parse an e7impress file.
+    """
+
+    e7file = E7File(filename)
+    song = e7file.get_song()
+
+    if format == 'txt':
+        result_str = song.txt()
+    elif format == 'json':
+        result_str = song.json()
+    else:
+        result_str = 'error'
+
+    if output:
+        try:
+            with open(output, 'w') as f:
+                f.write(result_str)
+
+        except Exception as e:
+            print(f'error: could not write file ({e})')
+            return
+
+    else:
+        print(result_str)
+
+
+@cli.command()
+@click.argument('filename',
+                type=click.Path(exists=True))
+@click.option('--format', '-f',
+              type=click.Choice(['txt', 'json'], case_sensitive=False),
+              default='txt',
+              help='The output format')
+@click.pass_context
+def load(ctx, filename, format):
+    """Load a `Song` file.
+    """
+
+    try:
+        song = Song.load(filename)
+
+        if format == 'txt':
+            result_str = song.txt()
+        elif format == 'json':
+            result_str = song.json()
+        else:
+            result_str = 'error'
+
+        print(result_str)
+
+    except Exception as e:
+        print(f'error: could not load song ({e})')
+
+
+if __name__ == '__main__':
+    cli()
