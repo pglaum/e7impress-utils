@@ -11,6 +11,8 @@ python package manager.
 - click
 - pydantic
 
+(e.g. run `pip install -r requirements.txt` or install them manually)
+
 ## command line utilities
 
 The is a command-line program `e7` can be used to create scripts.
