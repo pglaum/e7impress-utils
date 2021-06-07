@@ -1,7 +1,7 @@
 # e7impress utils
 
 This is a parser for e7impress files.
-The song can be written into a json file, for easy usage with further content.
+The song lyrics can be output as json or plain text.
 
 ## setup
 
@@ -27,6 +27,44 @@ The resulting json files can be loaded and printed as txt:
 
 ```shell
 $ ./e7 load output.json
+```
+
+### full command line syntax
+
+```shell
+$ ./e7 --help
+Usage: e7 [OPTIONS] COMMAND [ARGS]...
+
+  Initialize the cli context.
+
+Options:
+  --debug / --no-debug
+  --help                Show this message and exit.
+
+Commands:
+  load   Load a `Song` file.
+  parse  Parse an e7impress file.
+
+$ ./e7 load --help
+Usage: e7 load [OPTIONS] FILENAME
+
+  Load a `Song` file.
+
+Options:
+  -f, --format [txt|json]  The output format
+  --help                   Show this message and exit.
+
+$ ./e7 parse --help
+Usage: e7 parse [OPTIONS] FILENAME
+
+  Parse an e7impress file.
+
+Options:
+  -f, --format [txt|json]  The output format.
+  -o, --output TEXT        The output file. If no filename is given, the
+                           result iswritten to stdout.
+
+  --help                   Show this message and exit.
 ```
 
 ## e7parser
