@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Any, Dict, List
 import json
 import os
+import re
 
 
 class Verse(BaseModel):
@@ -58,6 +59,40 @@ class Song(BaseModel):
 
         return None
 
+    def format_verse_name(self, name: str) -> str:
+        """Try make a common verse name format.
+        """
+
+        if 'vers' in name.lower() or 'strophe' in name.lower():
+
+            numbers = re.findall(r'\b\d+\b', name)
+            numbers = [int(n) for n in numbers if n.isdigit()]
+            if numbers:
+                number = numbers[0]  # there should only be one number anyways
+            else:
+                number = 1
+
+            return f'Strophe {number}'
+
+        if 'chorus' in name.lower() or 'refrain' in name.lower():
+
+            # we usually only have one chorus
+            return 'Refrain 1'
+
+        if 'bridge' in name.lower():
+
+            # we usually only have one bridge
+            return 'Bridge 1'
+
+        numbers = re.findall(r'\b\d+\b', name)
+        numbers = [int(n) for n in numbers if n.isdigit()]
+        if numbers:
+            number = numbers[0]  # there should only be one number anyways
+        else:
+            number = 1
+
+        return f'Misc {number}'
+
     def txt(self) -> str:
         """Get a formatted string text of the whole song.
         """
@@ -69,7 +104,13 @@ class Song(BaseModel):
             found = False
             for verse in self.verses:
                 if verse.name == item:
-                    res += f'{verse.name}:\r\n'
+
+                    verse.text = verse.text.replace('* * *', '')
+                    while '\r\n\r\n' in verse.text:
+
+                        verse.text = verse.text.replace('\r\n\r\n', '\r\n')
+
+                    res += f'{self.format_verse_name(verse.name)}\r\n'
                     res += verse.text
                     if not res.endswith('\r\n'):
                         res += '\r\n'
