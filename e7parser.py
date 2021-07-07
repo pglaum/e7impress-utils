@@ -238,7 +238,7 @@ class E7File:
             return
 
         # the first line contains the interesting fields
-        first_line = self.__content.splitlines()[0]
+        first_line = self.__content.split('\r\n')[0]
 
         self.__fields = self.__make_fields(first_line)
 
